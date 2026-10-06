@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Baasha Job Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="tablet" class="hidden">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-mark">B</div>
+                <div>
+                    <div class="brand-title">JOB <span>CENTER</span></div>
+                    <div class="brand-sub">Baasha Bhai Studio</div>
+                </div>
+            </div>
+            <div class="side-label">Jobs</div>
+            <nav id="jobList"></nav>
+            <div class="crew-mini" id="crewMini"></div>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <div class="tabs">
+                    <button class="tab active" data-tab="overview">Overview</button>
+                    <button class="tab" data-tab="crew">Crew</button>
+                    <button class="tab" data-tab="leaderboard">Leaderboard</button>
+                </div>
+                <button class="close" id="closeBtn" title="Close (Esc)"><i class="fa-solid fa-xmark"></i></button>
+            </header>
+
+            <section id="view"></section>
+
+            <footer class="footer">
+                <span>baasha_jobcore · free &amp; open source</span>
+                <span>baashabhai.com · discord.gg/5XjyX44FQs</span>
+            </footer>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

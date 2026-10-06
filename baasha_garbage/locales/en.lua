@@ -1,0 +1,25 @@
+Locales = Locales or {}
+
+Locales['en'] = {
+    pickup_bag     = 'Pick up bag',
+    throw_bag      = 'Throw bag in truck',
+    compact        = 'Run compactor',
+    compacting     = 'Running compactor...',
+    finish_route   = 'Dump load & finish route',
+    hud_stop       = 'Stop %s/%s  ·  Bags left: %s  ·  Truck: %s/%s',
+    hud_return     = 'Route complete  ·  Drive back to the depot',
+    hud_full       = 'Truck full: run the compactor at the back',
+    truck_full     = 'The truck is full. Run the compactor first.',
+    too_far_stop   = 'You need to be at the stop.',
+    no_bags        = 'No bags left here.',
+    already_bag    = 'You are already carrying a bag.',
+    not_at_depot   = 'Bring the truck back to the depot first.',
+    found_item     = 'Found %sx %s in the bag!',
+    next_stop      = 'Stop cleared! Head to the next stop.',
+    route_done     = 'All stops cleared! Bring the truck back to the depot.',
+    new_route      = 'New route assigned: %s stops.',
+    drop_hint      = '[G] Drop bag',
+    dropped_bag    = 'You dropped the bag.',
+    blip_stop      = 'Garbage stop',
+    blip_depot     = 'Garbage depot',
+}
