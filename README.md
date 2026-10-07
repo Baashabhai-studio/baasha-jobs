@@ -9,6 +9,7 @@ Works on **ESX, QBCore and Qbox**, with **ox_target or qb-target**, and **ox_inv
 |---|---|
 | `baasha_jobcore` | Required. Crews, XP and levels, pay, work vehicles, uniforms, job tablet (`/jobs`), leaderboards, framework bridge |
 | `baasha_garbage` | Garbage Collector: crew truck routes, bag carrying, compactor, recyclables |
+| `baasha_fishing` | Fishing: Deep Drop minigame, 25 species with item photos, Fish Market, boat rental, deep-sea fishing |
 
 More jobs coming. They all plug into the same core.
 
@@ -18,13 +19,15 @@ More jobs coming. They all plug into the same core.
 |---|---|
 | ![Job Center tablet](media/job-center-tablet.jpg) | ![Depot](media/depot.jpg) |
 | ![Throwing a bag into the truck](media/throw-bag.jpg) | ![Running the compactor](media/compactor.jpg) |
+| ![Deep Drop minigame on Del Perro Pier](media/fishing-deep-drop.jpg) | ![Deep-sea fishing from the boat](media/fishing-deep-sea.jpg) |
+| ![A full line of deep-sea fish](media/fishing-full-line.jpg) | ![Fish Guide with all 25 species](media/fishing-guide.jpg) |
 
 ---
 
 ## Features
 
 **Job core**
-- 📱 **Job center tablet** (`/jobs` or the depot ped): level, XP bar, perks, stats, crew, leaderboard
+- 📱 **Job center tablet** (`/jobs`, the depot ped, or **J** while on a shift): level, XP bar, perks, stats, crew, leaderboard. The key only works on a shift, so it never clashes with other scripts.
 - 👥 **Crews of up to 4.** Invite nearby players. Pay is shared with a crew bonus of up to +20%.
 - ⭐ **10 levels per job.** Pay goes up with level (+5% per level), and perks unlock as you level.
 - 🚛 **Work vehicles** are spawned server-side so the whole crew sees the same one. Deposits are refunded based on damage, and keys and fuel are handled for you.
@@ -43,6 +46,17 @@ More jobs coming. They all plug into the same core.
 - **Recyclables** (plastic, glass, rubber, scrap, copper, aluminium, steel) that feed into crafting
 - Finish the route at the depot for a route bonus and a new route, without ending the shift
 
+**Fishing**
+- 🎣 **Deep Drop minigame:** drop the hook and dodge fish on the way down, then steer into as many as you can on the way up. Jellyfish knock your last fish off, and gold rings give an extra hook.
+- 🌊 **Every spot has its own water:** piers with a sea floor, junk and octopus, Alamo Sea with lake fish and sunken branches, and the deep sea 200 m down with tuna, marlin and sharks
+- 🐟 **25 species + junk**, from anchovies to the Great White Shark, each with its own size, value and **item photo** (28 icons included)
+- 🎒 **Real inventory items** (ox_inventory, qb-inventory, ESX). If an item isn't installed, the catch goes into a built-in cooler instead.
+- 🏪 **Fish Market** at the pier kiosk (floating $ sign): your catch with photos and prices, Sell all, boat rental and the **Fish Guide** collection (photos, where to find each fish, price ranges, your biggest catch)
+- 🚤 **Boat rental** with a refundable deposit. Sail 350 m+ from shore for deep-sea fishing.
+- ⭐ **Levels:** a longer line, more hooks, new spots (Alamo Sea Lv 2, Paleto Lv 3), epic fish from Lv 4 and legendary fish from Lv 7
+- 🛡️ **Server-built dives:** the server decides which fish are where, their weight and value, and checks every result (depth, hooks, timing), so catches can't be faked
+- 🔁 Prefer a simpler game? Set `Config.Minigame = 'strike'` for a one-fish-per-bite spinning-ring game
+
 ## Requirements
 - [ox_lib](https://github.com/overextended/ox_lib)
 - [oxmysql](https://github.com/overextended/oxmysql)
@@ -55,12 +69,19 @@ More jobs coming. They all plug into the same core.
    ```cfg
    ensure baasha_jobcore
    ensure baasha_garbage
+   ensure baasha_fishing
    ```
 3. Running `qb-garbagejob`? Stop it, because it uses the same depot:
    ```cfg
    stop qb-garbagejob
    ```
-4. Restart the server. The database table is created automatically.
+4. **Fishing items (recommended):** add the fish items and their pictures to your inventory. Everything is in `baasha_fishing/install/`:
+   - **qb-inventory:** paste `qbcore_items.lua` into `qb-core/shared/items.lua`, copy `images/*.png` to `qb-inventory/html/images/`
+   - **ox_inventory:** paste `ox_inventory_items.lua` into `ox_inventory/data/items.lua`, copy `images/*.png` to `ox_inventory/web/images/`
+   - **ESX:** run `esx_items.sql`, copy `images/*.png` to your inventory's image folder
+
+   Skipping this is fine: catches then go into the built-in cooler and are sold at the Fish Market.
+5. Restart the server. The database table is created automatically.
 
 ## Configuration
 | File | What to change |
@@ -68,6 +89,7 @@ More jobs coming. They all plug into the same core.
 | `baasha_jobcore/config.lua` | Framework, pay account, crew bonus, level XP, tablet command and key, webhook |
 | `baasha_jobcore/editable/*.lua` | Notifications, vehicle keys, fuel, hooks for pay and level-ups |
 | `baasha_garbage/config.lua` | Depot, truck, deposit, uniform, carried bag position, pay per bag, route length by level, recyclables, stops, hand-placed bag spots |
+| `baasha_fishing/config.lua` | Market and boat position, minigame (`deepdrop` or `strike`), line length and hooks by level, which fish live at which depth, species, prices, rarities, spots, items or cooler |
 
 ## For developers: adding a job
 Register your job from a server script and the core handles the rest: the depot ped, blip, tablet, crew and truck.

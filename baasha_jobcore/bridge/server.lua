@@ -131,6 +131,41 @@ function Bridge.AddItem(src, item, count)
     return false
 end
 
+function Bridge.CountItem(src, item)
+    if Bridge.Inventory == 'ox_inventory' then
+        return exports.ox_inventory:Search(src, 'count', item) or 0
+    end
+    local p = getPlayer(src)
+    if not p then return 0 end
+    if Bridge.Framework == 'qbcore' then
+        local it = p.Functions.GetItemByName(item)
+        return it and it.amount or 0
+    elseif Bridge.Framework == 'esx' then
+        local it = p.getInventoryItem(item)
+        return it and it.count or 0
+    end
+    return 0
+end
+
+--- Removes an item. Returns false if the player doesn't have enough.
+function Bridge.RemoveItem(src, item, count)
+    if Bridge.CountItem(src, item) < count then return false end
+    if Bridge.Inventory == 'ox_inventory' then
+        return exports.ox_inventory:RemoveItem(src, item, count) and true or false
+    end
+    local p = getPlayer(src)
+    if not p then return false end
+    if Bridge.Framework == 'qbcore' then
+        local ok = p.Functions.RemoveItem(item, count)
+        if ok then TriggerClientEvent('qb-inventory:client:ItemBox', src, QB().Shared.Items[item], 'remove', count) end
+        return ok
+    elseif Bridge.Framework == 'esx' then
+        p.removeInventoryItem(item, count)
+        return true
+    end
+    return false
+end
+
 -- ── Character logout (multicharacter) ────────────────────────────────────
 function Bridge.OnPlayerUnload(cb)
     AddEventHandler('playerDropped', function() cb(source) end)

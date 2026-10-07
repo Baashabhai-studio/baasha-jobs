@@ -14,7 +14,8 @@ Config.Debug  = false
 
 -- ── Job tablet ────────────────────────────────────────────────────────────
 Config.TabletCommand = 'jobs'   -- /jobs opens the job center tablet (false = disable)
-Config.TabletKey     = ''       -- e.g. 'F6' (players can rebind in GTA settings). '' = no keybind
+Config.TabletKey     = 'J'      -- opens the tablet while on a shift only (shown on screen). Players can rebind it in
+                                -- GTA Settings > Key Bindings > FiveM. '' = no key, use the command
 
 -- ── Pay ───────────────────────────────────────────────────────────────────
 Config.PayAccount = 'bank'      -- 'bank' | 'cash'

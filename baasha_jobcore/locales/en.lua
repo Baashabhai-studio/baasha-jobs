@@ -3,6 +3,9 @@ Locales = Locales or {}
 Locales['en'] = {
     open_tablet        = 'Open Job Center',
     tablet_cmd_help    = 'Open the job center tablet',
+    tablet_key_help    = 'Job tablet (while on a shift)',
+    tablet_hint_key    = '[%s] Job tablet · End shift',
+    tablet_hint_cmd    = '/%s · Job tablet · End shift',
     not_near_depot     = 'You need to be at the %s depot to start a shift.',
     already_on_shift   = 'Your crew is already on a shift.',
     not_leader         = 'Only the crew leader can do that.',
@@ -29,4 +32,5 @@ Locales['en'] = {
     crew_kicked        = 'You were removed from the crew.',
     new_leader         = '%s is now the crew leader.',
     job_unavailable    = 'That job is not available right now.',
+    rental_limit       = 'Your crew already has a rental out. Return it first.',
 }

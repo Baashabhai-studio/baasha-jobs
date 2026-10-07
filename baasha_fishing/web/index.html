@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Baasha Fishing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Bite prompt -->
+    <div id="bite" class="hidden">
+        <svg class="ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" /><circle id="biteRing" cx="50" cy="50" r="44" /></svg>
+        <div class="bite-inner">
+            <div class="bite-mark">!</div>
+            <div class="bite-key">E</div>
+        </div>
+        <div class="bite-label">BITE! HOOK IT</div>
+    </div>
+
+    <!-- Strike minigame -->
+    <div id="reel" class="hidden">
+        <div class="reel-head">
+            <span class="reel-title"><i class="fa-solid fa-fish"></i> STRIKE!</span>
+            <span class="reel-rarity" id="reelRarity"></span>
+        </div>
+        <div class="strike">
+            <svg viewBox="0 0 100 100" class="sring" id="sring">
+                <circle cx="50" cy="50" r="42" class="sring-track"></circle>
+                <circle cx="50" cy="50" r="42" class="sring-zone" id="sringZone"></circle>
+                <g id="needle"><line x1="50" y1="50" x2="50" y2="12"></line><circle cx="50" cy="12" r="3.2"></circle></g>
+                <circle cx="50" cy="50" r="5" class="sring-hub"></circle>
+            </svg>
+            <div class="strike-side">
+                <div class="s-label">REEL IT IN</div>
+                <div class="pips" id="hitPips"></div>
+                <div class="s-label">LINE</div>
+                <div class="pips" id="linePips"></div>
+                <div class="s-flash" id="sFlash"></div>
+            </div>
+        </div>
+        <div class="reel-hint">Press <b>E</b> / <b>SPACE</b> / click when the needle is in the <b class="green">green zone</b></div>
+    </div>
+
+    <!-- Catch card -->
+    <div id="catch" class="hidden">
+        <div class="c-stripe" id="cStripe"></div>
+        <div class="c-icon" id="cIcon"><i class="fa-solid fa-fish"></i></div>
+        <div class="c-body">
+            <div class="c-rarity" id="cRarity"></div>
+            <div class="c-name" id="cName"></div>
+            <div class="c-meta" id="cMeta"></div>
+        </div>
+        <div class="c-value" id="cValue"></div>
+    </div>
+
+    <!-- Fish Market (at the fishing ped) -->
+    <div id="market" class="hidden">
+        <header class="m-top">
+            <div class="m-brand">
+                <div class="m-logo"><i class="fa-solid fa-fish"></i></div>
+                <div>
+                    <div class="m-title">FISH <span>MARKET</span></div>
+                    <div class="m-sub">Del Perro Pier · Level <b id="mLevel">1</b></div>
+                </div>
+            </div>
+            <nav class="m-tabs">
+                <button class="m-tab active" data-tab="cooler"><i class="fa-solid fa-box"></i> Cooler</button>
+                <button class="m-tab" data-tab="boat"><i class="fa-solid fa-ship"></i> Boat</button>
+                <button class="m-tab" data-tab="guide"><i class="fa-solid fa-book-open"></i> Fish Guide</button>
+            </nav>
+            <button class="m-close" id="mClose" title="Close (Esc)"><i class="fa-solid fa-xmark"></i></button>
+        </header>
+        <section class="m-view" id="mView"></section>
+        <footer class="m-foot">
+            <span>baasha_fishing · free &amp; open source</span>
+            <span>baashabhai.com</span>
+        </footer>
+    </div>
+
+    <!-- Deep Drop minigame -->
+    <div id="drop" class="hidden">
+        <canvas id="ddCanvas" width="480" height="800"></canvas>
+        <div class="dd-hud">
+            <div class="dd-pill" id="ddPhase">▼ DROP</div>
+            <div class="dd-pill dd-hooks" id="ddHooks"></div>
+            <div class="dd-pill"><i class="fa-solid fa-sack-dollar"></i><span id="ddCash">$0</span></div>
+        </div>
+        <div class="dd-spot" id="ddSpot"></div>
+        <div class="dd-keys"><b>A</b><b>D</b> steer · <b>S</b> sink faster · <b>SPACE</b> reel up</div>
+        <div class="dd-results hidden" id="ddResults">
+            <div class="dd-card">
+                <h2 id="ddTitle">NICE <span>CATCH</span></h2>
+                <div class="dd-list" id="ddList"></div>
+                <div class="dd-total"><span id="ddCount"></span><b id="ddTotal">$0</b></div>
+                <div class="dd-hint">Every catch is in your inventory</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="deepdrop.js"></script>
+</body>
+</html>

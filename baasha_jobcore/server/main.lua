@@ -119,32 +119,56 @@ local function publicCrew(crew)
     }
 end
 
+-- ── Vehicles ──────────────────────────────────────────────────────────────
+--- Spawns a server-side job vehicle every crew member can see. Returns entity, netId, plate.
+local function spawnJobVehicle(jobId, model, vehType, spot)
+    local veh = CreateVehicleServerSetter(joaat(model), vehType or 'automobile', spot.x, spot.y, spot.z, spot.w)
+    local timeout = GetGameTimer() + 5000
+    while not DoesEntityExist(veh) and GetGameTimer() < timeout do Wait(0) end
+    if not DoesEntityExist(veh) then return nil end
+    local plate = ('%s%04d'):format(Config.VehiclePlatePrefix:sub(1, 4), math.random(0, 9999))
+    SetVehicleNumberPlateText(veh, plate)
+    -- Public flag so other scripts (car theft, impound, garages…) can ignore job vehicles
+    Entity(veh).state:set('baashaJobVehicle', jobId, true)
+    return veh, NetworkGetNetworkIdFromEntity(veh), plate
+end
+
+--- Refunds the deposit if the vehicle is back near `returnTo` (scaled by damage), then deletes it.
+local function settleVehicle(netId, deposit, payer, returnTo, returnDistance)
+    local veh = NetworkGetEntityFromNetworkId(netId)
+    deposit = deposit or 0
+    if veh ~= 0 and DoesEntityExist(veh) then
+        local returned = returnTo and #(GetEntityCoords(veh) - vector3(returnTo.x, returnTo.y, returnTo.z)) <= (returnDistance or Config.ReturnDistance)
+        if returned and deposit > 0 then
+            local health = Config.DamageRefund and math.max(0.0, math.min(1.0, GetVehicleBodyHealth(veh) / 1000.0)) or 1.0
+            local refund = math.floor(deposit * health)
+            Bridge.AddMoney(payer, 'bank', refund, 'baasha-job-deposit')
+            notify(payer, L('deposit_refund', refund), 'success')
+        elseif deposit > 0 then
+            notify(payer, L('deposit_lost'), 'error')
+        end
+        DeleteEntity(veh)
+    elseif deposit > 0 then
+        notify(payer, L('deposit_lost'), 'error')
+    end
+end
+
 -- ── Shifts ────────────────────────────────────────────────────────────────
 local function endShift(crewId, reason)
     local crew = Crews[crewId]
     if not crew or not crew.jobId then return end
     local job, jobId = Jobs[crew.jobId], crew.jobId
+    local function payerOf(src) return GetPlayerName(src) and src or crew.leader end
 
     -- Work vehicle: refund deposit if it's back at the depot
     if crew.vehicle then
-        local veh = NetworkGetEntityFromNetworkId(crew.vehicle)
-        local payer = GetPlayerName(crew.depositPayer) and crew.depositPayer or crew.leader
-        if veh ~= 0 and DoesEntityExist(veh) then
-            local depot = job and job.depot.coords
-            local atDepot = depot and #(GetEntityCoords(veh) - vector3(depot.x, depot.y, depot.z)) <= Config.ReturnDistance
-            if atDepot and (crew.deposit or 0) > 0 then
-                local health = Config.DamageRefund and math.max(0.0, math.min(1.0, GetVehicleBodyHealth(veh) / 1000.0)) or 1.0
-                local refund = math.floor(crew.deposit * health)
-                Bridge.AddMoney(payer, 'bank', refund, 'baasha-job-deposit')
-                notify(payer, L('deposit_refund', refund), 'success')
-            elseif (crew.deposit or 0) > 0 then
-                notify(payer, L('deposit_lost'), 'error')
-            end
-            DeleteEntity(veh)
-        elseif (crew.deposit or 0) > 0 then
-            notify(payer, L('deposit_lost'), 'error')
-        end
+        settleVehicle(crew.vehicle, crew.deposit, payerOf(crew.depositPayer), job and job.depot.coords)
     end
+    -- Rented extras (boats, bikes…): refund if back at their return point
+    for netId, r in pairs(crew.rentals or {}) do
+        settleVehicle(netId, r.deposit, payerOf(r.payer), r.returnTo, r.returnDistance)
+    end
+    crew.rentals = {}
 
     local summary = {}
     for _, m in ipairs(crew.members) do
@@ -188,22 +212,16 @@ local function startShift(src, jobId, spawnIndex)
             Bridge.AddMoney(src, 'bank', deposit, 'baasha-job-deposit')
             return false, L('no_spawn_spot')
         end
-        local veh = CreateVehicleServerSetter(joaat(job.vehicle.model), job.vehicle.type or 'automobile', spot.x, spot.y, spot.z, spot.w)
-        local timeout = GetGameTimer() + 5000
-        while not DoesEntityExist(veh) and GetGameTimer() < timeout do Wait(0) end
-        if not DoesEntityExist(veh) then
+        local veh
+        veh, netId, plate = spawnJobVehicle(jobId, job.vehicle.model, job.vehicle.type, spot)
+        if not veh then
             Bridge.AddMoney(src, 'bank', deposit, 'baasha-job-deposit')
             return false, L('no_spawn_spot')
         end
-        plate = ('%s%04d'):format(Config.VehiclePlatePrefix:sub(1, 4), math.random(0, 9999))
-        SetVehicleNumberPlateText(veh, plate)
-        -- Public flag so other scripts (car theft, impound, garages…) can ignore job vehicles
-        Entity(veh).state:set('baashaJobVehicle', jobId, true)
-        netId = NetworkGetNetworkIdFromEntity(veh)
     end
 
     crew.jobId, crew.vehicle, crew.plate = jobId, netId, plate
-    crew.deposit, crew.depositPayer = deposit, src
+    crew.deposit, crew.depositPayer, crew.rentals = deposit, src, {}
     crew.startedAt, crew.earned, crew.window = os.time(), {}, { start = os.time(), n = 0 }
 
     for _, m in ipairs(crew.members) do
@@ -481,6 +499,55 @@ exports('ResetStats', function(jobId, identifier)
 end)
 
 exports('GetIdentifier', function(src) return Bridge.GetIdentifier(src) end)
+
+--- Rent an extra vehicle for the crew during a shift (boat, bike, van…).
+--- opts = { model, type = 'automobile'|'boat'|'bike'|'heli', spot = vector4, deposit = 0,
+---         returnTo = vector3 (default: spot), returnDistance = Config.ReturnDistance, max = 1 }
+--- Returns netId, plate — or nil, error message.
+exports('RentVehicle', function(src, opts)
+    local crew = Crews[PlayerCrew[src]]
+    if not crew or not crew.jobId then return nil, L('job_unavailable') end
+    crew.rentals = crew.rentals or {}
+    local count = 0
+    for _ in pairs(crew.rentals) do count = count + 1 end
+    if count >= (opts.max or 1) then return nil, L('rental_limit') end
+
+    local deposit = opts.deposit or 0
+    if deposit > 0 then
+        local paid = Bridge.RemoveMoney(src, 'bank', deposit, 'baasha-job-deposit')
+            or Bridge.RemoveMoney(src, 'cash', deposit, 'baasha-job-deposit')
+        if not paid then return nil, L('not_enough_money', deposit) end
+        notify(src, L('deposit_paid', deposit), 'inform')
+    end
+
+    local veh, netId, plate = spawnJobVehicle(crew.jobId, opts.model, opts.type, opts.spot)
+    if not veh then
+        if deposit > 0 then Bridge.AddMoney(src, 'bank', deposit, 'baasha-job-deposit') end
+        return nil, L('no_spawn_spot')
+    end
+    crew.rentals[netId] = {
+        deposit = deposit, payer = src, returnDistance = opts.returnDistance,
+        returnTo = opts.returnTo or vector3(opts.spot.x, opts.spot.y, opts.spot.z),
+    }
+    for _, m in ipairs(crew.members) do
+        TriggerClientEvent('baasha_jobcore:client:vehicleRented', m, netId, plate)
+    end
+    return netId, plate
+end)
+
+--- Return a rented vehicle early (refund if it's at its return point).
+exports('ReturnVehicle', function(src, netId)
+    local crew = Crews[PlayerCrew[src]]
+    local r = crew and crew.rentals and crew.rentals[netId]
+    if not r then return false end
+    settleVehicle(netId, r.deposit, GetPlayerName(r.payer) and r.payer or src, r.returnTo, r.returnDistance)
+    crew.rentals[netId] = nil
+    for _, m in ipairs(crew.members) do TriggerClientEvent('baasha_jobcore:client:vehicleReturned', m, netId) end
+    return true
+end)
+
+exports('CountItem', function(src, item) return Bridge.CountItem(src, item) end)
+exports('RemoveItem', function(src, item, count) return Bridge.RemoveItem(src, item, count) end)
 
 exports('GiveItem', function(src, item, count)
     local crew = Crews[PlayerCrew[src]]

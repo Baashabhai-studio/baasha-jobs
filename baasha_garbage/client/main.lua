@@ -25,6 +25,8 @@ local function updateHud()
         elseif S.inTruck >= S.capacity then text = L('hud_full')
         else text = L('hud_stop', S.index, S.total, S.bagsLeft, S.inTruck, S.capacity) end
         if carrying then text = text .. '  \n' .. L('drop_hint') end
+        local hint = Core:TabletHint()
+        if hint then text = text .. '  \n' .. hint end
     end
     if text == hudText then return end
     hudText = text

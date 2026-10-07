@@ -92,9 +92,23 @@ if Config.TabletCommand then
     TriggerEvent('chat:addSuggestion', '/' .. Config.TabletCommand, L('tablet_cmd_help'))
 end
 
+-- The key only does something while you're on a shift, so it doesn't clash with other scripts the rest of the time
+local tabletKeybind
 if Config.TabletKey ~= '' then
-    lib.addKeybind({ name = 'baasha_jobs_tablet', description = L('tablet_cmd_help'), defaultKey = Config.TabletKey, onPressed = function() openTablet() end })
+    tabletKeybind = lib.addKeybind({
+        name = 'baasha_jobs_shift_tablet', description = L('tablet_key_help'), defaultKey = Config.TabletKey,
+        onPressed = function() if Shift then openTablet() end end,
+    })
 end
+
+--- On-screen hint for job HUDs while on shift: "[J] Job tablet · End shift".
+--- Shows the player's own key if they rebound it, or the command when there's no keybind.
+-- (jobs only show their HUD during their own shift, so no shift check here: it may run before Shift is set)
+exports('TabletHint', function()
+    local ok, key = pcall(function() return tabletKeybind and tabletKeybind:getCurrentKey() end)
+    if ok and key and key ~= '' then return L('tablet_hint_key', key) end
+    if Config.TabletCommand then return L('tablet_hint_cmd', Config.TabletCommand) end
+end)
 
 -- ── Depots (blip + ped + target), rebuilt whenever jobs register ─────────
 local function removeDepot(id)
@@ -216,8 +230,29 @@ RegisterNetEvent('baasha_jobcore:client:shiftStarted', function(jobId, crew)
     Editable.OnShiftStart(jobId)
 end)
 
+-- Rented extras (boats, bikes…): keys + fuel for every crew member, like the main work vehicle
+local rentals = {}
+
+RegisterNetEvent('baasha_jobcore:client:vehicleRented', function(netId, plate)
+    rentals[netId] = plate
+    CreateThread(function()
+        local veh, timeout = 0, GetGameTimer() + 10000
+        repeat
+            if NetworkDoesNetworkIdExist(netId) then veh = NetworkGetEntityFromNetworkId(netId) end
+            if veh == 0 then Wait(100) end
+        until veh ~= 0 or GetGameTimer() > timeout
+        Editable.GiveVehicleKeys(veh ~= 0 and veh or nil, plate)
+        if veh ~= 0 then Editable.SetFuel(veh, 100.0) end
+    end)
+end)
+
+RegisterNetEvent('baasha_jobcore:client:vehicleReturned', function(netId)
+    rentals[netId] = nil
+end)
+
 RegisterNetEvent('baasha_jobcore:client:shiftEnded', function(jobId)
     Shift = nil
+    rentals = {}
     restoreOutfit()
     Editable.OnShiftEnd(jobId)
     refreshTablet()
@@ -257,6 +292,25 @@ exports('GetWorkVehicle', function()
     local veh = NetworkGetEntityFromNetworkId(Shift.crew.vehicle)
     return veh ~= 0 and veh or nil
 end)
+--- Rented vehicles that currently exist on this client: { { entity, netId, plate } }
+exports('GetRentedVehicles', function()
+    local list = {}
+    for netId, plate in pairs(rentals) do
+        if NetworkDoesNetworkIdExist(netId) then
+            local veh = NetworkGetEntityFromNetworkId(netId)
+            if veh ~= 0 and DoesEntityExist(veh) then list[#list + 1] = { entity = veh, netId = netId, plate = plate } end
+        end
+    end
+    return list
+end)
+
+--- Net ids of all of this crew's rentals, even ones not currently streamed in on this client
+exports('GetRentalNetIds', function()
+    local list = {}
+    for netId in pairs(rentals) do list[#list + 1] = netId end
+    return list
+end)
+
 exports('OpenTablet', openTablet)
 exports('CloseTablet', closeTablet)
 exports('IsTabletOpen', function() return tabletOpen end)
