@@ -10,6 +10,7 @@ Works on **ESX, QBCore and Qbox**, with **ox_target or qb-target**, and **ox_inv
 | `baasha_jobcore` | Required. Crews, XP and levels, pay, work vehicles, uniforms, job tablet (`/jobs`), leaderboards, framework bridge |
 | `baasha_garbage` | Garbage Collector: crew truck routes, bag carrying, compactor, recyclables |
 | `baasha_fishing` | Fishing: Deep Drop minigame, 25 species with item photos, Fish Market, boat rental, deep-sea fishing |
+| `baasha_mining` | Mining: Rock Breaker minigame, ores and gems with item photos, dynamite boulders, smelter, Mining Office |
 
 More jobs coming. They all plug into the same core.
 
@@ -21,6 +22,8 @@ More jobs coming. They all plug into the same core.
 | ![Throwing a bag into the truck](media/throw-bag.jpg) | ![Running the compactor](media/compactor.jpg) |
 | ![Deep Drop minigame on Del Perro Pier](media/fishing-deep-drop.jpg) | ![Deep-sea fishing from the boat](media/fishing-deep-sea.jpg) |
 | ![A full line of deep-sea fish](media/fishing-full-line.jpg) | ![Fish Guide with all 25 species](media/fishing-guide.jpg) |
+| ![Rock Breaker minigame](media/mining-rock-breaker.jpg) | ![A gem vein found](media/mining-gem-vein.jpg) |
+| ![Dynamite boulder loot](media/mining-dynamite.jpg) | ![Smelting ore into ingots](media/mining-smelter.jpg) |
 
 ---
 
@@ -57,6 +60,18 @@ More jobs coming. They all plug into the same core.
 - 🛡️ **Server-built dives:** the server decides which fish are where, their weight and value, and checks every result (depth, hooks, timing), so catches can't be faked
 - 🔁 Prefer a simpler game? Set `Config.Minigame = 'strike'` for a one-fish-per-bite spinning-ring game
 
+**Mining**
+- ⛏️ **Rock Breaker minigame:** a weak spot glows on the rock and a ring closes in. Strike when they meet: PERFECT hits give bonus ore, cracks spread until the rock shatters, and your pickaxe swings in sync. Easy at level 1, tougher at high levels.
+- 💎 **Gem veins:** sometimes a vein sparkles. Hit it for amethyst, emerald, sapphire, ruby or diamond (with carat sizes).
+- 🪨 **Glowing ore rocks** at the Davis Quartz quarry, shared by everyone. They crumble after 3 uses and grow back. Locked rocks show the level they need.
+- 🧨 **Dynamite boulders (level 3):** plant a charge, step back, BOOM: a pile of ore. A visual blast only, so it's safe with anti-cheats.
+- 🔥 **Smelter:** 2 ore + 1 coal = 1 ingot, worth more than raw ore. Keep mining while it smelts. Point the ingots at your crafting items (`iron`, `copper`…) in the config.
+- 🏢 **Mining Office:** your ore bag with photos and prices (Sell all), the smelter and a **Collection** of every ore and gem you've found
+- 🎒 **15 items with photos** (ores, ingots, gems). If an item isn't installed, finds go into a built-in ore bag instead.
+- ⭐ **Levels:** silver and the Gold Vein Ridge (Lv 2), dynamite (Lv 3), gold (Lv 4), the jackhammer (Lv 5) and diamonds (Lv 7)
+- 🛡️ **Server-owned rocks:** the server decides every find and checks the minigame timing, so nothing can be faked
+- 📍 Add your own rock spots in-game with `/miningspot` (admins)
+
 ## Requirements
 - [ox_lib](https://github.com/overextended/ox_lib)
 - [oxmysql](https://github.com/overextended/oxmysql)
@@ -70,17 +85,18 @@ More jobs coming. They all plug into the same core.
    ensure baasha_jobcore
    ensure baasha_garbage
    ensure baasha_fishing
+   ensure baasha_mining
    ```
 3. Running `qb-garbagejob`? Stop it, because it uses the same depot:
    ```cfg
    stop qb-garbagejob
    ```
-4. **Fishing items (recommended):** add the fish items and their pictures to your inventory. Everything is in `baasha_fishing/install/`:
+4. **Fishing and mining items (recommended):** add the items and their pictures to your inventory. Everything is in `baasha_fishing/install/` and `baasha_mining/install/`:
    - **qb-inventory:** paste `qbcore_items.lua` into `qb-core/shared/items.lua`, copy `images/*.png` to `qb-inventory/html/images/`
    - **ox_inventory:** paste `ox_inventory_items.lua` into `ox_inventory/data/items.lua`, copy `images/*.png` to `ox_inventory/web/images/`
    - **ESX:** run `esx_items.sql`, copy `images/*.png` to your inventory's image folder
 
-   Skipping this is fine: catches then go into the built-in cooler and are sold at the Fish Market.
+   Skipping this is fine: catches then go into the built-in cooler (fishing) or ore bag (mining) and are sold at the market / office.
 5. Restart the server. The database table is created automatically.
 
 ## Configuration
@@ -90,6 +106,7 @@ More jobs coming. They all plug into the same core.
 | `baasha_jobcore/editable/*.lua` | Notifications, vehicle keys, fuel, hooks for pay and level-ups |
 | `baasha_garbage/config.lua` | Depot, truck, deposit, uniform, carried bag position, pay per bag, route length by level, recyclables, stops, hand-placed bag spots |
 | `baasha_fishing/config.lua` | Market and boat position, minigame (`deepdrop` or `strike`), line length and hooks by level, which fish live at which depth, species, prices, rarities, spots, items or cooler |
+| `baasha_mining/config.lua` | Foreman and office position, rock spots per area, ores and gems (prices, levels), minigame speed, dynamite, smelter recipes and ingot items, tools, items or ore bag |
 
 ## For developers: adding a job
 Register your job from a server script and the core handles the rest: the depot ped, blip, tablet, crew and truck.

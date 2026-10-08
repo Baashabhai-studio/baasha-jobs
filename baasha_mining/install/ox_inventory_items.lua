@@ -1,0 +1,17 @@
+-- Baasha Mining items for ox_inventory (ox_inventory/data/items.lua) — paste inside return { ... }
+-- Copy install/images/*.png into ox_inventory/web/images/
+    ['ore_stone'] = { label = 'Stone', weight = 500, stack = true, close = false, description = 'A chunk of quarry stone. Sell it at the Mining Office.' },
+    ['ore_coal'] = { label = 'Coal', weight = 300, stack = true, close = false, description = 'Fuel for the smelter. Sell it or smelt with it.' },
+    ['ore_copper'] = { label = 'Copper Ore', weight = 600, stack = true, close = false, description = 'Raw copper ore. Smelt it into ingots at the Mining Office.' },
+    ['ore_iron'] = { label = 'Iron Ore', weight = 700, stack = true, close = false, description = 'Raw iron ore. Smelt it into ingots at the Mining Office.' },
+    ['ore_silver'] = { label = 'Silver Ore', weight = 700, stack = true, close = false, description = 'Raw silver ore. Smelt it into ingots at the Mining Office.' },
+    ['ore_gold'] = { label = 'Gold Ore', weight = 800, stack = true, close = false, description = 'Raw gold ore. Smelt it into ingots at the Mining Office.' },
+    ['ingot_copper'] = { label = 'Copper Ingot', weight = 1000, stack = true, close = false, description = 'A smelted copper bar. Great for crafting.' },
+    ['ingot_iron'] = { label = 'Iron Ingot', weight = 1000, stack = true, close = false, description = 'A smelted iron bar. Great for crafting.' },
+    ['ingot_silver'] = { label = 'Silver Ingot', weight = 1000, stack = true, close = false, description = 'A smelted silver bar.' },
+    ['ingot_gold'] = { label = 'Gold Ingot', weight = 1000, stack = true, close = false, description = 'A smelted gold bar. Worth a lot.' },
+    ['gem_amethyst'] = { label = 'Amethyst', weight = 50, stack = true, close = false, description = 'A purple gemstone found in a gem vein.' },
+    ['gem_emerald'] = { label = 'Emerald', weight = 50, stack = true, close = false, description = 'A green gemstone found in a gem vein.' },
+    ['gem_sapphire'] = { label = 'Sapphire', weight = 50, stack = true, close = false, description = 'A blue gemstone found deep in the quarry.' },
+    ['gem_ruby'] = { label = 'Ruby', weight = 50, stack = true, close = false, description = 'A red gemstone found deep in the quarry.' },
+    ['gem_diamond'] = { label = 'Diamond', weight = 50, stack = true, close = false, description = 'The rarest find in the quarry.' },

@@ -1,0 +1,36 @@
+Locales = Locales or {}
+
+Locales['en'] = {
+    hud_bag         = 'Bag: %s items (~$%s)',
+    hud_mine        = '[E] Mine · %s rock (%s/%s)',
+    hud_locked      = '%s needs level %s',
+    hud_blast       = '[E] Plant dynamite (%s left)',
+    hud_blast_cd    = 'Boulder is back in %s',
+    hud_fuse        = 'FIRE IN THE HOLE! %s',
+    hud_hint_rocks  = 'Find a glowing rock in the quarry',
+
+    open_office     = 'Open Mining Office',
+    sign_job        = 'MINING JOB',
+    sign_job_sub    = '[ALT] Start a shift here',
+    sign_office     = 'MINING OFFICE',
+    sign_office_sub = '[ALT] Sell | Smelter | Collection',
+    blip_area       = 'Mining',
+
+    too_far         = 'Go to the Mining Office at the quarry.',
+    not_near_rock   = 'Get closer to the rock.',
+    rock_gone       = 'This rock is already broken.',
+    busy            = 'Finish what you are doing first.',
+    level_needed    = '%s needs level %s.',
+    tired           = 'Your arms give out. The rock holds.',
+    nothing_to_sell = 'Nothing to sell.',
+    sold            = 'Sold %s items.',
+    no_charges      = 'No dynamite left this shift.',
+    boulder_cd      = 'This boulder was just blasted.',
+    planted         = 'Charge planted. Get back!',
+    blasted         = 'BOOM! The boulder burst open.',
+    smelt_started   = 'The smelter is working: %s ingots.',
+    smelt_busy      = 'The smelter is still busy.',
+    smelt_missing   = 'Not enough ore or coal.',
+    smelt_collected = 'Collected %s ingots.',
+    nothing_ready   = 'Nothing to collect yet.',
+}

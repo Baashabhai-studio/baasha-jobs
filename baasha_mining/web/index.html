@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Baasha Mining</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Rock Breaker minigame (panel on the right, the player stays visible) -->
+    <div id="breaker" class="off">
+        <canvas id="bkCanvas" width="520" height="640"></canvas>
+        <div class="bk-top">
+            <div>
+                <div class="bk-rar" id="bkRar">COMMON</div>
+                <div class="bk-ore" id="bkOre">Copper rock</div>
+            </div>
+            <div class="bk-stamina" id="bkStamina"></div>
+        </div>
+        <div class="bk-progress"><div id="bkProgress"></div></div>
+        <div class="bk-keys">Strike with <b>E</b> / <b>SPACE</b> when the ring meets the glowing spot</div>
+    </div>
+
+    <!-- Finds card (after a rock or a dynamite blast) -->
+    <div id="result" class="off">
+        <h2 id="rTitle">ROCK <span>BROKEN</span></h2>
+        <div class="r-list" id="rList"></div>
+        <div class="r-total"><span id="rMeta"></span><b id="rTotal">$0</b></div>
+    </div>
+
+    <!-- Mining Office (at the quarry) -->
+    <div id="office" class="off">
+        <header class="m-top">
+            <div class="m-brand">
+                <div class="m-logo"><i class="fa-solid fa-gem"></i></div>
+                <div>
+                    <div class="m-title">MINING <span>OFFICE</span></div>
+                    <div class="m-sub">Davis Quartz · Level <b id="oLevel">1</b></div>
+                </div>
+            </div>
+            <nav class="m-tabs">
+                <button class="m-tab active" data-tab="bag"><i class="fa-solid fa-sack-xmark"></i> Ore Bag</button>
+                <button class="m-tab" data-tab="smelter"><i class="fa-solid fa-fire"></i> Smelter</button>
+                <button class="m-tab" data-tab="collection"><i class="fa-solid fa-gem"></i> Collection</button>
+            </nav>
+            <button class="m-close" id="oClose" title="Close (Esc)"><i class="fa-solid fa-xmark"></i></button>
+        </header>
+        <section class="m-view" id="oView"></section>
+        <footer class="m-foot">
+            <span>baasha_mining · free &amp; open source</span>
+            <span>baashabhai.com</span>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="breaker.js"></script>
+</body>
+</html>
