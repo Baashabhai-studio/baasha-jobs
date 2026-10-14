@@ -33,4 +33,7 @@ Locales['en'] = {
     new_leader         = '%s is now the crew leader.',
     job_unavailable    = 'That job is not available right now.',
     rental_limit       = 'Your crew already has a rental out. Return it first.',
+    poll_started       = 'Your server wants your opinion: would you like a %s job? Open /%s and vote.',
+    poll_thanks        = 'Thanks for voting!',
+    poll_running       = 'A poll is already running. End it first.',
 }

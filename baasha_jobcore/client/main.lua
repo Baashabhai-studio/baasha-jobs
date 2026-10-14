@@ -83,6 +83,32 @@ RegisterNUICallback('kick', function(body, cb)
     cb(1)
 end)
 
+-- Premium card (admins) and the player poll
+RegisterNUICallback('premium', function(body, cb)
+    local ok, msg = lib.callback.await('baasha_jobcore:premium', false, body.action, body)
+    if msg then notify(msg, ok and 'success' or 'error') end
+    cb({ ok = ok })
+    refreshTablet()
+end)
+
+RegisterNUICallback('pollVote', function(body, cb)
+    local ok = lib.callback.await('baasha_jobcore:pollVote', false, body.choice)
+    if ok then notify(L('poll_thanks'), 'success') end
+    cb({ ok = ok })
+    refreshTablet()
+end)
+
+RegisterNetEvent('baasha_jobcore:client:pollStarted', function(label)
+    notify(L('poll_started', label, Config.TabletCommand or 'jobs'), 'inform')
+end)
+
+-- One reminder after joining if a poll is running and you haven't voted
+CreateThread(function()
+    Wait(90000)
+    local label = lib.callback.await('baasha_jobcore:pollPending', false)
+    if label then notify(L('poll_started', label, Config.TabletCommand or 'jobs'), 'inform') end
+end)
+
 RegisterNUICallback('leaderboard', function(body, cb)
     cb(lib.callback.await('baasha_jobcore:leaderboard', false, body.jobId) or {})
 end)

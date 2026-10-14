@@ -102,7 +102,7 @@ More jobs coming. They all plug into the same core.
 ## Configuration
 | File | What to change |
 |---|---|
-| `baasha_jobcore/config.lua` | Framework, pay account, crew bonus, level XP, tablet command and key, webhook |
+| `baasha_jobcore/config.lua` | Framework, pay account, crew bonus, level XP, tablet command and key, webhook, premium jobs list (admins only, can be turned off) |
 | `baasha_jobcore/editable/*.lua` | Notifications, vehicle keys, fuel, hooks for pay and level-ups |
 | `baasha_garbage/config.lua` | Depot, truck, deposit, uniform, carried bag position, pay per bag, route length by level, recyclables, stops, hand-placed bag spots |
 | `baasha_fishing/config.lua` | Market and boat position, minigame (`deepdrop` or `strike`), line length and hooks by level, which fish live at which depth, species, prices, rarities, spots, items or cooler |
@@ -133,6 +133,19 @@ Client exports: `GetShift()`, `IsOnShift(jobId)`, `GetWorkVehicle()`, `OpenTable
 Other scripts can skip job vehicles with:
 ```lua
 if Entity(vehicle).state.baashaJobVehicle then return end
+```
+
+## Premium jobs list (admins only)
+Server admins see a small **Premium** section in the Job Center with Baasha Bhai Studio's premium jobs and a link to their store page. To be clear about what it does:
+
+- **Players never see it.** Only players with your admin permission (`command` ace by default) get the list. The server decides this, not the tablet.
+- **Jobs you already have are hidden**, so it never advertises something you own.
+- **The list is a small public file** ([premium.json](premium.json) in this repo), downloaded every 6 hours. Nothing about your server or your players is sent anywhere.
+- **Optional player poll.** From that card an admin can ask their players whether they'd like a job: players then see a *Server poll* card with the job's video and Yes / No (no price, no link) and one small notification. It's off until an admin starts one, it ends by itself, and **the votes stay on your server**. Turn polls off with `polls = false`.
+- **Hide it from the tablet** with the *Hide premium jobs* button (bring it back with `/jobspremium on`), or **turn it off** in `baasha_jobcore/config.lua`:
+
+```lua
+Config.PremiumJobs = { enabled = false }
 ```
 
 ## License

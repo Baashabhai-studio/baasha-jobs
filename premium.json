@@ -1,0 +1,26 @@
+{
+    "about": "Premium jobs shown to server admins in the baasha_jobcore Job Center (players never see this). Turn it off with Config.PremiumJobs.enabled = false.",
+    "jobs": [
+        {
+            "id": "lifeguard",
+            "resource": "baasha_lifeguard",
+            "label": "Lifeguard",
+            "icon": "fa-solid fa-life-ring",
+            "status": "available",
+            "price": "from €19",
+            "tagline": "Keep Vespucci Beach safe: real binoculars tower watch, jet ski rescues, CPR, first aid and shark alerts.",
+            "description": "A premium job for the Baasha Job Center. Watch a living beach from the towers through real binoculars, spot the swimmer in trouble, race out on the jet ski, tow floating swimmers in, bring them back with CPR, treat jellyfish stings and clear the water when a shark shows up. Escrow €19 or Open Source €25.",
+            "features": [
+                "Living beach with swimmers and waders",
+                "Real binoculars tower watch: spot who is drowning",
+                "Jet ski rescues: they climb off and thank you",
+                "Tow floating swimmers in, CPR with a heart monitor",
+                "Jellyfish first aid and shark alerts",
+                "Radio calls, crews of up to 4, server-side checks"
+            ],
+            "url": "https://www.baashabhai.com/scripts/baasha-lifeguard",
+            "video": null,
+            "image": "https://cdn.sanity.io/images/k8ws4qgl/production/1de284ed1debaafdc4407fe5f6cacc4ba43182f8-1920x1080.jpg"
+        }
+    ]
+}

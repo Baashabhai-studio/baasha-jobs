@@ -47,5 +47,15 @@ Config.LeaderboardSize = 10
 -- ── Discord logs (leave empty to disable) ─────────────────────────────────
 Config.Webhook = ''
 
+-- ── Premium jobs (admins only) ────────────────────────────────────────────
+-- Admins see Baasha Bhai Studio's premium jobs in the tablet, with a link to the store page.
+-- Players never see them. Jobs you already have installed are hidden. false = off.
+Config.PremiumJobs = {
+    enabled = true,
+    ace     = 'command',   -- who counts as an admin (the same permission your admin commands use)
+    feed    = 'https://raw.githubusercontent.com/Baashabhai-studio/baasha-jobs/main/premium.json',
+    polls   = true,        -- admins may ask their players (from the tablet) if they want a premium job. Off until an admin starts one.
+}
+
 -- ── Branding ──────────────────────────────────────────────────────────────
 Config.DepotBlips = true

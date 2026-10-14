@@ -178,3 +178,50 @@ td.money { color: var(--green); font-weight: 600; text-align: right; }
 
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-thumb { background: #26262c; border-radius: 99px; }
+
+/* ── Premium jobs (admins only) ─────────── */
+.premium-label { margin-top: 18px; color: var(--gold); display: flex; align-items: center; gap: 6px; }
+.premium-label span { margin-left: auto; color: var(--muted); font-size: 9px; letter-spacing: 0.08em; text-transform: none; }
+.job-item.premium { border: 1px dashed rgba(234, 179, 8, 0.25); }
+.job-item.premium .job-icon { background: linear-gradient(135deg, rgba(234, 179, 8, 0.25), rgba(234, 179, 8, 0.05)); }
+.job-item.premium .job-meta { color: var(--gold); }
+.job-item .lock { margin-left: auto; color: var(--muted); font-size: 11px; }
+.hero-icon.premium { background: linear-gradient(135deg, #facc15, #ca8a04); }
+.pbadge { display: inline-flex; align-items: center; gap: 5px; vertical-align: middle; margin-left: 8px; font: 700 11px 'Inter'; letter-spacing: 0.12em;
+          color: #000; background: var(--gold); padding: 4px 8px; border-radius: 6px; }
+.pimage { height: 150px; border-radius: 14px; background-size: cover; background-position: center; margin-bottom: 16px; border: 1px solid var(--line); }
+.pfeat { display: flex; gap: 10px; align-items: flex-start; padding: 7px 0; font-size: 13px; }
+.pfeat i { color: var(--green); margin-top: 3px; }
+.pprice { font-family: 'Rajdhani'; font-weight: 700; font-size: 38px; color: var(--gold); line-height: 1; margin-bottom: 10px; }
+
+/* ── Player poll ───────────────────────── */
+.job-item.poll { border: 1px solid rgba(34, 197, 94, 0.3); margin-bottom: 6px; }
+.job-item.poll .job-icon { background: rgba(34, 197, 94, 0.15); color: var(--green); }
+.pkicker { font: 700 10px 'Inter'; letter-spacing: 0.2em; color: var(--green); margin-bottom: 4px; }
+.pvideo { position: relative; padding-top: 42%; border-radius: 14px; overflow: hidden; margin-bottom: 16px; border: 1px solid var(--line); background: #000; }
+.pvideo iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.pvote { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.pvote .btn { flex: 1 1 140px; min-width: 0; padding: 12px 10px; font-size: 13px; }
+.presult { margin: 6px 0 12px; }
+.presult-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+.presult-row span:nth-child(2) { color: var(--green); font-weight: 700; }
+.presult-bar { height: 8px; border-radius: 99px; background: rgba(239, 68, 68, 0.35); overflow: hidden; }
+.presult-bar > div { height: 100%; background: var(--green); border-radius: 99px; }
+.ppoll { margin-top: 16px; }
+.ppoll h3 i { color: var(--gold); margin-right: 4px; }
+.pintro { font-size: 13px; color: var(--text); margin-bottom: 10px; }
+.pinfo { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 18px; margin-bottom: 14px; }
+.pinfo div { display: flex; gap: 9px; font-size: 12px; color: var(--muted); line-height: 1.45; }
+.pinfo i { color: var(--gold); margin-top: 2px; width: 14px; text-align: center; }
+.pinfo b { color: var(--text); }
+.pstart { display: flex; gap: 8px; }
+.pstart select { background: var(--panel-2); color: var(--text); border: 1px solid var(--line); border-radius: 10px; padding: 0 12px; font: 600 13px 'Inter'; }
+.btn-green { background: var(--green) !important; color: #000 !important; }
+.phide { display: flex; align-items: center; gap: 14px; margin-top: 16px; font-size: 11px; color: var(--muted); }
+.phide .btn { width: auto; white-space: nowrap; }
+.phide b { color: var(--text); }
+
+.padmin { display: flex; gap: 12px; align-items: center; padding: 12px 14px; margin-bottom: 18px; border-radius: 12px;
+          background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.35); font-size: 13px; color: var(--muted); line-height: 1.45; }
+.padmin i { font-size: 20px; color: #60a5fa; }
+.padmin b, .pintro b { color: var(--text); }

@@ -326,6 +326,158 @@ local function rewardPlayer(src, amount, xp)
     return true
 end
 
+-- ── Premium jobs (admins only, see Config.PremiumJobs) ────────────────────
+local Premium = {}
+
+local function httpsOnly(url) return type(url) == 'string' and url:sub(1, 8) == 'https://' and url or nil end
+
+local function loadPremium()
+    local P = Config.PremiumJobs
+    if not P or not P.enabled or not P.feed then return end
+    PerformHttpRequest(P.feed, function(status, body)
+        if status ~= 200 or not body then return end
+        local ok, data = pcall(json.decode, body)
+        if not ok or type(data) ~= 'table' or type(data.jobs) ~= 'table' then return end
+        local list = {}
+        for _, j in ipairs(data.jobs) do
+            if type(j) == 'table' and type(j.id) == 'string' and type(j.label) == 'string' then
+                local features = {}
+                for _, f in ipairs(type(j.features) == 'table' and j.features or {}) do
+                    if type(f) == 'string' then features[#features + 1] = f end
+                end
+                list[#list + 1] = {
+                    id = j.id, resource = tostring(j.resource or ''), label = j.label, icon = tostring(j.icon or 'fa-solid fa-crown'),
+                    tagline = tostring(j.tagline or ''), description = tostring(j.description or ''), features = features,
+                    price = j.price and tostring(j.price) or nil, status = tostring(j.status or 'available'),
+                    url = httpsOnly(j.url), video = httpsOnly(j.video), image = httpsOnly(j.image),
+                }
+            end
+        end
+        Premium = list
+    end, 'GET', '', { ['Accept'] = 'application/json' })
+end
+
+CreateThread(function()
+    while true do
+        loadPremium()
+        Wait(6 * 60 * 60 * 1000) -- refresh every 6 hours
+    end
+end)
+
+local function isAdmin(src)
+    local P = Config.PremiumJobs
+    return P ~= nil and P.enabled == true and IsPlayerAceAllowed(src, P.ace or 'command')
+end
+--- An admin pressed "Hide premium jobs" in the tablet (whole server, until /jobspremium on)
+local function premiumHidden() return GetResourceKvpInt('premium_hidden') == 1 end
+local function pollsAllowed()
+    local P = Config.PremiumJobs
+    return P ~= nil and P.enabled == true and P.polls ~= false and not premiumHidden()
+end
+
+--- Premium jobs this admin doesn't have yet (players get nothing)
+local function premiumFor(src)
+    if not isAdmin(src) or premiumHidden() then return nil end
+    local out = {}
+    for _, j in ipairs(Premium) do
+        local installed = Jobs[j.id] or (j.resource ~= '' and GetResourceState(j.resource) ~= 'missing')
+        if not installed then out[#out + 1] = j end
+    end
+    return #out > 0 and out or nil
+end
+
+-- ── Player poll: an admin can ask their players if they want a premium job ──
+-- Off until an admin starts one from the tablet. Players see the job and its video with Yes / No,
+-- never a price or a link. Votes are kept on this server only (resource KVP), nothing is sent anywhere.
+local function getPoll()
+    local raw = GetResourceKvpString('premium_poll')
+    local p = raw and json.decode(raw) or nil
+    if p and type(p.votes) ~= 'table' then p.votes = {} end
+    return p
+end
+local function savePoll(p)
+    if p then SetResourceKvp('premium_poll', json.encode(p)) else DeleteResourceKvp('premium_poll') end
+end
+local function pollActive(p) return p ~= nil and not p.ended and os.time() < p.endsAt end
+local function tally(p)
+    local yes, no = 0, 0
+    for _, v in pairs(p.votes) do if v == 'yes' then yes = yes + 1 else no = no + 1 end end
+    return yes, no
+end
+
+--- What this player sees of the poll: players only while it runs, admins also the final result
+local function pollFor(src)
+    local p = getPoll()
+    if not p or not pollsAllowed() then return nil end
+    local active, admin = pollActive(p), isAdmin(src)
+    if not active and not admin then return nil end
+    local id = Bridge.GetIdentifier(src)
+    local yes, no = tally(p)
+    return { job = p.job, active = active, endsIn = math.max(0, p.endsAt - os.time()), by = admin and p.by or nil,
+             myVote = id and p.votes[id] or nil, yes = yes, no = no }
+end
+
+lib.callback.register('baasha_jobcore:premium', function(src, action, data)
+    if not isAdmin(src) then return false end
+    if action == 'hide' then
+        SetResourceKvpInt('premium_hidden', 1)
+        local p = getPoll()
+        if pollActive(p) then p.ended = true savePoll(p) end
+        return true
+    elseif action == 'start' then
+        if not pollsAllowed() then return false end
+        if pollActive(getPoll()) then return false, L('poll_running') end
+        local job
+        for _, j in ipairs(Premium) do if j.id == (data and data.jobId) then job = j end end
+        if not job then return false end
+        local days = tonumber(data.days)
+        if days ~= 1 and days ~= 3 and days ~= 7 then days = 3 end
+        savePoll({
+            job = { id = job.id, label = job.label, icon = job.icon, tagline = job.tagline, description = job.description,
+                    features = job.features, video = job.video, image = job.image },
+            startedAt = os.time(), endsAt = os.time() + days * 86400, by = GetPlayerName(src), votes = {},
+        })
+        TriggerClientEvent('baasha_jobcore:client:pollStarted', -1, job.label)
+        return true
+    elseif action == 'end' then
+        local p = getPoll()
+        if p then p.ended = true savePoll(p) end
+        return true
+    elseif action == 'clear' then
+        savePoll(nil)
+        return true
+    end
+    return false
+end)
+
+lib.callback.register('baasha_jobcore:pollVote', function(src, choice)
+    local p = getPoll()
+    if not pollsAllowed() or not pollActive(p) or (choice ~= 'yes' and choice ~= 'no') then return false end
+    local id = Bridge.GetIdentifier(src)
+    if not id then return false end
+    p.votes[id] = choice -- one vote per character, they can change it while the poll runs
+    savePoll(p)
+    return true
+end)
+
+--- A poll this player hasn't voted on yet (for the one-time reminder when they join)
+lib.callback.register('baasha_jobcore:pollPending', function(src)
+    local p = getPoll()
+    if not pollsAllowed() or not pollActive(p) then return nil end
+    local id = Bridge.GetIdentifier(src)
+    if id and p.votes[id] then return nil end
+    return p.job.label
+end)
+
+-- /jobspremium on|off : show or hide the premium jobs card for admins again (after "Hide" in the tablet)
+RegisterCommand('jobspremium', function(src, args)
+    if src > 0 and not isAdmin(src) and not IsPlayerAceAllowed(src, (Config.PremiumJobs or {}).ace or 'command') then return end
+    local on = args[1] ~= 'off'
+    SetResourceKvpInt('premium_hidden', on and 0 or 1)
+    local msg = on and 'Premium jobs card is shown to admins again.' or 'Premium jobs card hidden for everyone.'
+    if src > 0 then notify(src, msg, 'success') else print('[baasha_jobcore] ' .. msg) end
+end, false)
+
 -- ── Tablet data ───────────────────────────────────────────────────────────
 local function tabletData(src)
     local crew = ensureCrew(src)
@@ -347,7 +499,8 @@ local function tabletData(src)
     for _, m in ipairs(crew.members) do members[#members + 1] = { id = m, name = Bridge.GetName(m) } end
 
     return {
-        me = src, jobs = jobs, nearDepot = nearDepot, maxLevel = #Config.Levels,
+        me = src, jobs = jobs, nearDepot = nearDepot, maxLevel = #Config.Levels, premium = premiumFor(src),
+        admin = isAdmin(src) and not premiumHidden(), poll = pollFor(src), pollsAllowed = pollsAllowed(),
         crew = { leader = crew.leader, members = members, jobId = crew.jobId, max = Config.MaxCrewSize },
     }
 end
