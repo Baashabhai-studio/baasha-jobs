@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baasha Delivery</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- HUD pill (no focus) -->
+    <div id="hud" class="hidden"></div>
+
+    <!-- Van Loading Puzzle -->
+    <div id="load" class="view hidden">
+        <div class="load-panel">
+            <header class="load-head">
+                <div class="brand">
+                    <div class="brand-mark">BB</div>
+                    <div class="brand-text">
+                        <div class="title">VAN <span>LOADING</span></div>
+                        <div class="sub">Pack the manifest · load the first stops by the doors</div>
+                    </div>
+                </div>
+                <div class="load-meta">
+                    <div class="score"><b id="scoreVal">0</b><span>%</span></div>
+                    <div class="meter"><div class="meter-fill" id="scoreFill"></div></div>
+                    <div class="timer" id="timer">00:00</div>
+                </div>
+            </header>
+
+            <div class="load-body">
+                <div class="grid-wrap">
+                    <div class="doors">▼ DOORS · first stops here ▼</div>
+                    <div class="grid" id="grid"></div>
+                </div>
+                <div class="dock">
+                    <div class="dock-head">PARCELS <span id="dockCount"></span></div>
+                    <div class="dock-tray" id="tray"></div>
+                    <div class="dock-legend" id="legend"></div>
+                </div>
+            </div>
+
+            <footer class="load-foot">
+                <div class="hint">Drag parcels into the van · <b>R</b> or <b>right-click</b> to rotate · click a placed parcel to pick it up</div>
+                <div class="actions">
+                    <button class="btn outline" id="autoPack">Auto-pack</button>
+                    <button class="btn gold" id="confirm">Load van</button>
+                </div>
+            </footer>
+            <div class="foot-brand">Baasha Bhai Studio · baashabhai.com</div>
+        </div>
+    </div>
+
+    <!-- Signature pad -->
+    <div id="sign" class="view hidden">
+        <div class="sign-card">
+            <div class="sign-head"><span class="sign-icon">✎</span> SIGNATURE REQUIRED</div>
+            <div class="sign-label" id="signLabel"></div>
+            <div class="sign-customer" id="signCustomer"></div>
+            <svg class="sign-svg" viewBox="0 0 300 110" preserveAspectRatio="none">
+                <path id="signPath" d="M 22 72 C 40 30, 62 92, 84 48 S 124 84, 148 38 S 190 78, 214 44 S 256 70, 278 30"
+                      fill="none" stroke="#f5b301" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <button class="btn gold" id="signConfirm">Confirm delivery</button>
+            <div class="sign-hint">Auto-confirms in <b id="signCount">6</b>s</div>
+        </div>
+    </div>
+
+    <!-- Rating card -->
+    <div id="rate" class="hidden">
+        <div class="rate-card">
+            <div class="rate-stars" id="rateStars"></div>
+            <div class="rate-tip" id="rateTip"></div>
+            <div class="rate-cond" id="rateCond"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

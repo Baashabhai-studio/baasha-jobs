@@ -11,6 +11,7 @@ Works on **ESX, QBCore and Qbox**, with **ox_target or qb-target**, and **ox_inv
 | `baasha_garbage` | Garbage Collector: crew truck routes, bag carrying, compactor, recyclables |
 | `baasha_fishing` | Fishing: Deep Drop minigame, 25 species with item photos, Fish Market, boat rental, deep-sea fishing |
 | `baasha_mining` | Mining: Rock Breaker minigame, ores and gems with item photos, dynamite boulders, smelter, Mining Office |
+| `baasha_delivery` | Delivery Driver: van loading puzzle, 65 real doors, signature, fragile, express and large parcels, ratings and tips |
 
 More jobs coming. They all plug into the same core.
 
@@ -24,6 +25,8 @@ More jobs coming. They all plug into the same core.
 | ![A full line of deep-sea fish](media/fishing-full-line.jpg) | ![Fish Guide with all 25 species](media/fishing-guide.jpg) |
 | ![Rock Breaker minigame](media/mining-rock-breaker.jpg) | ![A gem vein found](media/mining-gem-vein.jpg) |
 | ![Dynamite boulder loot](media/mining-dynamite.jpg) | ![Smelting ore into ingots](media/mining-smelter.jpg) |
+| ![Van loading puzzle](media/delivery-van-loading.jpg) | ![Taking a parcel from the van](media/delivery-take-parcel.jpg) |
+| ![5-star delivery with a tip](media/delivery-rating.jpg) | ![Fragile parcel delivered at 100%](media/delivery-fragile.jpg) |
 
 ---
 
@@ -72,6 +75,17 @@ More jobs coming. They all plug into the same core.
 - 🛡️ **Server-owned rocks:** the server decides every find and checks the minigame timing, so nothing can be faked
 - 📍 Add your own rock spots in-game with `/miningspot` (admins)
 
+**Delivery Driver**
+- 📦 **Van Loading Puzzle:** drag & drop the manifest into the van's cargo grid (R / right-click rotates). First stops by the doors, nothing heavy against fragile parcels, left and right balanced. The server checks every layout and scores it, and a better score means a bigger route bonus. Auto-pack is there if you're in a hurry (lower score), or switch to a simple progress bar with `Config.Loading.mode = 'quick'`.
+- 🏘️ **65 real doors:** 49 houses in Vinewood Hills, Richman Glen, Davis, Grove Street and Vespucci Canals, plus 16 shop back doors. Each route stays in one neighbourhood and gets longer as you level up.
+- 🚚 **Carry every parcel:** take it from the back of the van (the doors open and shut) and walk it to the door. Set it down with a put-down animation, or hand it to the customer.
+- ✍️ **Signatures (level 3):** ring the bell, the customer opens the door, takes the box and signs. Nobody home? Bring it back to the van as a return.
+- 🍷 **Fragile (level 4):** crashes, drops and falls damage it, and the pay scales with its condition on arrival.
+- ⏱️ **Express (level 5)** with a timer and an on-time bonus, **large parcels (level 6)**, and a **hand truck for bulk shop deliveries (level 7)**
+- ⭐ **Ratings and tips:** every stop gets 1-5 stars for speed and condition. 4+ stars earn a tip.
+- 🛡️ **Server-checked:** layouts, distances, the right parcel at the right door, signatures and every payment
+- 📍 Add your own doors in-game with `/deliveryspot house|business <name>` (admins, stand facing the door). `/deliveryspots` shows every stop.
+
 ## Requirements
 - [ox_lib](https://github.com/overextended/ox_lib)
 - [oxmysql](https://github.com/overextended/oxmysql)
@@ -86,17 +100,20 @@ More jobs coming. They all plug into the same core.
    ensure baasha_garbage
    ensure baasha_fishing
    ensure baasha_mining
+   ensure baasha_delivery
    ```
 3. Running `qb-garbagejob`? Stop it, because it uses the same depot:
    ```cfg
    stop qb-garbagejob
    ```
+   Running stock **qb-shops**? Its own store-delivery job also uses the GoPostal lot. That's why the delivery job uses the Post OP van (`boxville4`, which qb-shops leaves alone) and parks its ped beside the qb-shops marker. Don't switch the van to `boxville2` there.
 4. **Fishing and mining items (recommended):** add the items and their pictures to your inventory. Everything is in `baasha_fishing/install/` and `baasha_mining/install/`:
    - **qb-inventory:** paste `qbcore_items.lua` into `qb-core/shared/items.lua`, copy `images/*.png` to `qb-inventory/html/images/`
    - **ox_inventory:** paste `ox_inventory_items.lua` into `ox_inventory/data/items.lua`, copy `images/*.png` to `ox_inventory/web/images/`
    - **ESX:** run `esx_items.sql`, copy `images/*.png` to your inventory's image folder
 
    Skipping this is fine: catches then go into the built-in cooler (fishing) or ore bag (mining) and are sold at the market / office.
+   The delivery job needs no items.
 5. Restart the server. The database table is created automatically.
 
 ## Configuration
@@ -107,6 +124,7 @@ More jobs coming. They all plug into the same core.
 | `baasha_garbage/config.lua` | Depot, truck, deposit, uniform, carried bag position, pay per bag, route length by level, recyclables, stops, hand-placed bag spots |
 | `baasha_fishing/config.lua` | Market and boat position, minigame (`deepdrop` or `strike`), line length and hooks by level, which fish live at which depth, species, prices, rarities, spots, items or cooler |
 | `baasha_mining/config.lua` | Foreman and office position, rock spots per area, ores and gems (prices, levels), minigame speed, dynamite, smelter recipes and ingot items, tools, items or ore bag |
+| `baasha_delivery/config.lua` | Depot and van, puzzle (grid, mode, auto-pack), route length by level, parcel types (pay, XP, level, shapes), signatures, fragile damage, tips, box props, stops |
 
 ## For developers: adding a job
 Register your job from a server script and the core handles the rest: the depot ped, blip, tablet, crew and truck.
