@@ -16,7 +16,7 @@ Works on **ESX, QBCore and Qbox**, with **ox_target or qb-target**, and **ox_inv
 
 More jobs coming. They all plug into the same core.
 
-🎬 **Showcase video:** _coming soon_
+🎬 **Showcase videos:** [Lifeguard](https://youtu.be/ISLawy5iAvQ) · [Delivery Driver](https://youtu.be/br_ANMWUnnk) · [Mining](https://youtu.be/UNhqhb7Y_XQ) · [Fishing](https://youtu.be/98TfxjfCisM)
 
 | | |
 |---|---|
