@@ -1,0 +1,118 @@
+:root {
+    --panel: rgba(10, 10, 12, 0.92);
+    --line: rgba(255, 255, 255, 0.08);
+    --text: #f4f4f5;
+    --muted: #a1a1aa;
+    --gold: #eab308;
+    --red: #ef4444;
+    --ecg: #4ade80;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100vw; height: 100vh; overflow: hidden; background: transparent; font-family: 'Inter', sans-serif; color: var(--text); user-select: none; }
+.off { display: none !important; }
+kbd { font: 700 1.1vh 'Inter'; color: var(--text); background: #1d1d23; border: 1px solid #33333b; border-bottom-width: 2px; border-radius: 0.4vh; padding: 0.1vh 0.6vh; }
+.green { color: #4ade80; }
+
+/* ── CPR panel (right side, the player stays visible) ───────── */
+#cpr {
+    position: absolute; right: 4vh; top: 50%; transform: translateY(-50%);
+    width: 64vh; background: var(--panel); border: 1px solid var(--line); border-top: 0.4vh solid var(--red);
+    border-radius: 1.6vh; box-shadow: 0 2vh 6vh rgba(0, 0, 0, 0.6); overflow: hidden;
+}
+#cpr.shake { animation: shake 0.3s; }
+@keyframes shake { 0%, 100% { transform: translate(0, -50%); } 25% { transform: translate(-0.6vh, -50%); } 75% { transform: translate(0.6vh, -50%); } }
+
+.cpr-top { display: flex; align-items: center; gap: 1.4vh; padding: 1.8vh 2vh 1.4vh; }
+.cpr-badge { width: 4.6vh; height: 4.6vh; border-radius: 1.1vh; display: grid; place-items: center; font-size: 2.2vh; color: #fff; background: var(--red); box-shadow: 0 0 2.4vh rgba(239, 68, 68, 0.45); animation: badge 1s infinite; }
+@keyframes badge { 50% { box-shadow: 0 0 0.6vh rgba(239, 68, 68, 0.2); } }
+.cpr-kicker { font: 700 1.1vh 'Inter'; letter-spacing: 0.2em; color: #fca5a5; }
+.cpr-title { font: 700 2.5vh 'Rajdhani'; letter-spacing: 0.04em; text-transform: uppercase; }
+.cpr-cycle { margin-left: auto; font: 700 1.2vh 'Inter'; letter-spacing: 0.15em; color: var(--muted); background: #18181d; padding: 0.6vh 1vh; border-radius: 0.6vh; }
+
+/* heart monitor */
+.monitor { position: relative; margin: 0 2vh; border-radius: 1.2vh; overflow: hidden; background: #020805; border: 1px solid rgba(74, 222, 128, 0.18); }
+#ecg { display: block; width: 100%; height: 15vh; }
+.mon-hr, .mon-spo2 { position: absolute; right: 1.4vh; display: flex; align-items: baseline; gap: 0.5vh; font-family: 'JetBrains Mono', monospace; }
+.mon-hr { top: 1vh; color: var(--ecg); }
+.mon-spo2 { top: 6vh; color: #38bdf8; }
+.mon-hr b { font-size: 3.8vh; line-height: 1; }
+.mon-spo2 b { font-size: 2.4vh; line-height: 1; }
+.mon-label { font: 700 1vh 'Inter'; letter-spacing: 0.15em; opacity: 0.8; }
+.mon-unit { font: 600 1vh 'Inter'; opacity: 0.6; }
+.mon-state { position: absolute; left: 1.4vh; top: 1vh; font: 700 1.2vh 'Inter'; letter-spacing: 0.2em; color: var(--red); animation: blink 1s infinite; }
+.mon-state.ok { color: var(--ecg); animation: none; }
+@keyframes blink { 50% { opacity: 0.35; } }
+
+/* stage */
+.cpr-stage { padding: 2vh 2vh 2.2vh; }
+.press, .breath { display: flex; align-items: center; gap: 3vh; }
+.beat-wrap { position: relative; width: 17vh; height: 17vh; flex-shrink: 0; display: grid; place-items: center; }
+.beat-ring { position: absolute; width: 17vh; height: 17vh; border-radius: 50%; border: 0.5vh solid rgba(255, 255, 255, 0.85); }
+.beat-core { width: 9vh; height: 9vh; border-radius: 50%; display: grid; place-items: center; font-size: 3.6vh; color: #fff;
+             background: radial-gradient(circle at 35% 30%, #f87171, #b91c1c); box-shadow: 0 0 3vh rgba(239, 68, 68, 0.45); transition: transform 0.08s; }
+.beat-core.hit { transform: scale(0.86); }
+.press-info { flex: 1; }
+.press-phase { font: 700 1.2vh 'Inter'; letter-spacing: 0.2em; color: var(--muted); }
+.press-count { font: 700 5vh 'Rajdhani'; line-height: 1.1; }
+.press-count b { color: var(--text); }
+.press-count span, .press-count { color: #52525b; }
+.press-hint { font: 500 1.35vh 'Inter'; color: var(--muted); margin: 0.6vh 0 1.4vh; }
+.rhythm { height: 0.9vh; border-radius: 99px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+.rhythm > div { height: 100%; width: 100%; border-radius: 99px; background: linear-gradient(90deg, #ef4444, #eab308 50%, #4ade80); transition: width 0.25s; }
+.rhythm-label { margin-top: 0.6vh; font: 700 1.05vh 'Inter'; letter-spacing: 0.15em; color: var(--muted); }
+.rhythm-label b { color: var(--text); }
+
+.lungs { position: relative; width: 17vh; height: 17vh; flex-shrink: 0; border-radius: 2vh; overflow: hidden; background: #121216; border: 1px solid var(--line); display: grid; place-items: center; }
+.lungs i { position: relative; font-size: 9vh; color: rgba(255, 255, 255, 0.85); z-index: 2; }
+.lung-fill { position: absolute; left: 0; right: 0; bottom: 0; height: 0; background: linear-gradient(0deg, #0284c7, #38bdf8); z-index: 1; }
+.lung-fill.over { background: linear-gradient(0deg, #b91c1c, #ef4444); }
+.lung-zone { position: absolute; left: 0; right: 0; bottom: 60%; height: 25%; border-top: 2px dashed #4ade80; border-bottom: 2px dashed #4ade80; background: rgba(74, 222, 128, 0.12); z-index: 3; }
+
+.cpr-flash { position: absolute; left: 0; right: 0; top: 40%; text-align: center; font: 700 4.4vh 'Rajdhani'; letter-spacing: 0.08em; pointer-events: none; opacity: 0; text-shadow: 0 0.3vh 1vh rgba(0, 0, 0, 0.8); }
+.cpr-flash.show { animation: pop 0.6s ease-out; }
+.cpr-flash.big { animation: popBig 2.2s ease-out forwards; font-size: 5.4vh; }
+@keyframes pop { 0% { opacity: 0; transform: scale(0.6); } 30% { opacity: 1; transform: scale(1.12); } 100% { opacity: 0; transform: scale(1); } }
+@keyframes popBig { 0% { opacity: 0; transform: scale(0.6); } 15% { opacity: 1; transform: scale(1.1); } 80% { opacity: 1; } 100% { opacity: 0; } }
+
+/* ── Binoculars (full screen) ───────────────────────────────── */
+#scope { position: absolute; inset: 0; background: #000; cursor: none; }
+#scopeCv { position: absolute; inset: 0; width: 100%; height: 100%; }
+.scope-top { position: absolute; top: 3vh; left: 0; right: 0; text-align: center; pointer-events: none; }
+.scope-kicker { font: 700 1.5vh 'Inter'; letter-spacing: 0.25em; color: #fca5a5; }
+.scope-kicker i { color: var(--red); margin-right: 0.6vh; }
+.scope-bonus { margin-top: 0.8vh; display: inline-block; font: 700 1.1vh 'Inter'; letter-spacing: 0.18em; color: #4ade80; background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3); padding: 0.4vh 1vh; border-radius: 99px; }
+.scope-bottom { position: absolute; bottom: 3vh; left: 50%; transform: translateX(-50%); width: 70vh; text-align: center; pointer-events: none; }
+.scope-bar { height: 0.7vh; border-radius: 99px; background: rgba(255, 255, 255, 0.1); overflow: hidden; }
+.scope-bar > div { height: 100%; width: 100%; background: linear-gradient(90deg, #ef4444, #f87171); border-radius: 99px; }
+.scope-bar > div.low { animation: blink 0.5s infinite; }
+.scope-hint { margin-top: 1.2vh; font: 500 1.3vh 'Inter'; color: var(--muted); }
+.scope-hint .dim { opacity: 0.7; }
+.scope-msg { position: absolute; left: 0; right: 0; top: 63%; text-align: center; font: 700 4vh 'Rajdhani'; letter-spacing: 0.1em; opacity: 0; pointer-events: none; text-shadow: 0 0.3vh 1.2vh rgba(0, 0, 0, 0.9); }
+.scope-msg.show { animation: popBig 1.8s ease-out forwards; }
+.scope-msg.good { color: #4ade80; }
+.scope-msg.bad { color: #f87171; }
+.scope-msg.meh { color: #e4e4e7; font-size: 3vh; }
+
+/* ── Call card (top right) ──────────────────────────────────── */
+.call { position: absolute; top: 3vh; right: 3vh; width: 42vh; display: flex; align-items: center; gap: 1.4vh; padding: 1.4vh 1.6vh;
+        background: var(--panel); border: 1px solid var(--line); border-left: 0.5vh solid var(--red); border-radius: 1.4vh;
+        box-shadow: 0 1.5vh 4vh rgba(0, 0, 0, 0.5); animation: callIn 0.45s cubic-bezier(.2, 1.4, .4, 1); }
+@keyframes callIn { from { transform: translateX(120%); } to { transform: none; } }
+.call-icon { width: 5vh; height: 5vh; flex-shrink: 0; border-radius: 1.2vh; display: grid; place-items: center; font-size: 2.3vh; color: #fff; background: var(--red); animation: badge 1s infinite; }
+.call.shark .call-icon { background: #f97316; }
+.call.jellyfish .call-icon { background: #a855f7; animation: none; }
+.call-body { flex: 1; min-width: 0; }
+.call-kicker { white-space: nowrap; font: 700 1vh 'Inter'; letter-spacing: 0.2em; color: #fca5a5; display: flex; gap: 0.8vh; align-items: center; }
+.call-spotted { color: #4ade80; background: rgba(74, 222, 128, 0.12); padding: 0.15vh 0.6vh; border-radius: 0.4vh; letter-spacing: 0.12em; }
+.call-title { font: 700 2.3vh 'Rajdhani'; text-transform: uppercase; letter-spacing: 0.03em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.call-where { font: 500 1.25vh 'Inter'; color: var(--muted); }
+.call-where i { color: var(--red); }
+.call-side { text-align: right; }
+.call-timer { font: 700 2.6vh 'JetBrains Mono', monospace; }
+.call-stage { font: 700 0.95vh 'Inter'; letter-spacing: 0.15em; color: var(--muted); max-width: 13vh; }
+.call.done { border-left-color: #4ade80; }
+.call.done .call-icon { background: #16a34a; animation: none; }
+.call.done .call-timer { color: #4ade80; }
+.call.failed { border-left-color: #52525b; }
+.call.failed .call-icon { background: #3f3f46; animation: none; }

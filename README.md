@@ -12,6 +12,7 @@ Works on **ESX, QBCore and Qbox**, with **ox_target or qb-target**, and **ox_inv
 | `baasha_fishing` | Fishing: Deep Drop minigame, 25 species with item photos, Fish Market, boat rental, deep-sea fishing |
 | `baasha_mining` | Mining: Rock Breaker minigame, ores and gems with item photos, dynamite boulders, smelter, Mining Office |
 | `baasha_delivery` | Delivery Driver: van loading puzzle, 65 real doors, signature, fragile, express and large parcels, ratings and tips |
+| `baasha_lifeguard` | Lifeguard: binoculars tower watch, jet ski rescues, towing, CPR minigame, jellyfish first aid and shark alerts on Vespucci Beach |
 
 More jobs coming. They all plug into the same core.
 
@@ -27,6 +28,8 @@ More jobs coming. They all plug into the same core.
 | ![Dynamite boulder loot](media/mining-dynamite.jpg) | ![Smelting ore into ingots](media/mining-smelter.jpg) |
 | ![Van loading puzzle](media/delivery-van-loading.jpg) | ![Taking a parcel from the van](media/delivery-take-parcel.jpg) |
 | ![5-star delivery with a tip](media/delivery-rating.jpg) | ![Fragile parcel delivered at 100%](media/delivery-fragile.jpg) |
+| ![Drowning swimmer call](media/lifeguard-drowning-call.jpg) | ![Jet ski rescue](media/lifeguard-jet-ski-rescue.jpg) |
+| ![Jellyfish sting first aid](media/lifeguard-first-aid.jpg) | ![Shark alert at the tower](media/lifeguard-shark-alert.jpg) |
 
 ---
 
@@ -86,6 +89,17 @@ More jobs coming. They all plug into the same core.
 - 🛡️ **Server-checked:** layouts, distances, the right parcel at the right door, signatures and every payment
 - 📍 Add your own doors in-game with `/deliveryspot house|business <name>` (admins, stand facing the door). `/deliveryspots` shows every stop.
 
+**Lifeguard**
+- 🏖️ **Living beach:** people swimming, treading water and wading in front of the towers (client-side, no server cost)
+- 🔭 **Real binoculars tower watch:** scan the actual sea, zoom in and spot the swimmer in trouble. Friendly wavers trick you at higher levels, and spotted calls pay a bonus.
+- 🚤 **Jet ski rescues:** ride out, grab them, stop in the shallows and they climb off, wade ashore and thank you
+- 🏊 **Floating swimmers:** swim out, tow them in (they float on the waves), carry them up the beach and lay them down anywhere on the sand
+- ❤️ **CPR minigame** with a live heart monitor and rescue breaths. A medical bag, defibrillator and first aid kit are laid out around the patient.
+- 🪼 **Jellyfish first aid (level 2)** and 🦈 **shark alerts (level 3):** whistle from the tower to clear the water
+- 📻 **Radio calls** with a timer and a call card, crews of up to 4 with shared pay
+- 🛡️ **Server-checked:** grabs, deliveries, CPR timing, tower watch and jet ski spawns
+- 📍 Admins: `/lgcall [drowning|floating|unconscious|jellyfish|shark] [near]` sends a test call, `/lgspot water|beach` saves a call spot to `spots.txt`, `/lgcprpos` live-tunes the CPR kneel position
+
 ## Requirements
 - [ox_lib](https://github.com/overextended/ox_lib)
 - [oxmysql](https://github.com/overextended/oxmysql)
@@ -101,6 +115,7 @@ More jobs coming. They all plug into the same core.
    ensure baasha_fishing
    ensure baasha_mining
    ensure baasha_delivery
+   ensure baasha_lifeguard
    ```
 3. Running `qb-garbagejob`? Stop it, because it uses the same depot:
    ```cfg
@@ -113,7 +128,7 @@ More jobs coming. They all plug into the same core.
    - **ESX:** run `esx_items.sql`, copy `images/*.png` to your inventory's image folder
 
    Skipping this is fine: catches then go into the built-in cooler (fishing) or ore bag (mining) and are sold at the market / office.
-   The delivery job needs no items.
+   The delivery and lifeguard jobs need no items.
 5. Restart the server. The database table is created automatically.
 
 ## Configuration
@@ -125,6 +140,7 @@ More jobs coming. They all plug into the same core.
 | `baasha_fishing/config.lua` | Market and boat position, minigame (`deepdrop` or `strike`), line length and hooks by level, which fish live at which depth, species, prices, rarities, spots, items or cooler |
 | `baasha_mining/config.lua` | Foreman and office position, rock spots per area, ores and gems (prices, levels), minigame speed, dynamite, smelter recipes and ingot items, tools, items or ore bag |
 | `baasha_delivery/config.lua` | Depot and van, puzzle (grid, mode, auto-pack), route length by level, parcel types (pay, XP, level, shapes), signatures, fragile damage, tips, box props, stops |
+| `baasha_lifeguard/config.lua` | HQ, ATV and jet ski, towers, water and beach call spots, call types (pay, XP, level, timers), binoculars watch (`mode = 'scope'` for a 2D minigame), beach life, CPR and first aid difficulty, treatment props, uniforms |
 
 ## For developers: adding a job
 Register your job from a server script and the core handles the rest: the depot ped, blip, tablet, crew and truck.
@@ -170,4 +186,4 @@ Config.PremiumJobs = { enabled = false }
 Free to use and modify on your own server. **Do not resell, reupload or remove credits.** See [LICENSE](LICENSE).
 
 ---
-Want more? Premium jobs and MLOs are at **[baashabhai.com](https://www.baashabhai.com)**.
+Want more? Scripts and MLOs are at **[baashabhai.com](https://www.baashabhai.com)**.

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Baasha Lifeguard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Rajdhani:wght@600;700&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- CPR minigame -->
+    <div id="cpr" class="off">
+        <header class="cpr-top">
+            <div class="cpr-badge"><i class="fa-solid fa-heart-pulse"></i></div>
+            <div>
+                <div class="cpr-kicker" id="cprKicker">EMERGENCY · CPR</div>
+                <div class="cpr-title" id="cprTitle">Unconscious swimmer</div>
+            </div>
+            <div class="cpr-cycle" id="cprCycle">CYCLE 1 / 2</div>
+        </header>
+
+        <div class="monitor">
+            <canvas id="ecg" width="760" height="190"></canvas>
+            <div class="mon-hr"><span class="mon-label">HR</span><b id="monHr">--</b><span class="mon-unit">bpm</span></div>
+            <div class="mon-spo2"><span class="mon-label">SpO₂</span><b id="monSpo2">71</b><span class="mon-unit">%</span></div>
+            <div class="mon-state" id="monState">NO PULSE</div>
+        </div>
+
+        <div class="cpr-stage">
+            <!-- compressions -->
+            <div class="press" id="pressView">
+                <div class="beat-wrap">
+                    <div class="beat-ring" id="beatRing"></div>
+                    <div class="beat-core" id="beatCore"><i class="fa-solid fa-hands"></i></div>
+                </div>
+                <div class="press-info">
+                    <div class="press-phase" id="phaseLabel">CHEST COMPRESSIONS</div>
+                    <div class="press-count"><b id="pressCount">0</b> / <span id="pressTotal">30</span></div>
+                    <div class="press-hint">Press <kbd>SPACE</kbd> / <kbd>E</kbd> on every beat</div>
+                    <div class="rhythm"><div id="rhythmBar"></div></div>
+                    <div class="rhythm-label">RHYTHM <b id="rhythmPct">100%</b></div>
+                </div>
+            </div>
+            <!-- rescue breaths -->
+            <div class="breath off" id="breathView">
+                <div class="lungs">
+                    <div class="lung-fill" id="lungFill"></div>
+                    <div class="lung-zone"></div>
+                    <i class="fa-solid fa-lungs"></i>
+                </div>
+                <div class="press-info">
+                    <div class="press-phase">RESCUE BREATHS</div>
+                    <div class="press-count"><b id="breathCount">0</b> / 2</div>
+                    <div class="press-hint">Hold <kbd>SPACE</kbd> / <kbd>E</kbd>, let go in the <b class="green">green zone</b></div>
+                </div>
+            </div>
+        </div>
+        <div class="cpr-flash" id="cprFlash"></div>
+    </div>
+
+    <!-- Tower watch: binoculars -->
+    <div id="scope" class="off">
+        <canvas id="scopeCv"></canvas>
+        <div class="scope-top">
+            <div class="scope-kicker"><i class="fa-solid fa-binoculars"></i> <span id="scopeTower">TOWER 1 · SCAN THE WATER</span></div>
+            <div class="scope-bonus" id="scopeBonus">SPOT IT YOURSELF: +25% PAY</div>
+        </div>
+        <div class="scope-msg" id="scopeMsg"></div>
+        <div class="scope-bottom">
+            <div class="scope-bar"><div id="scopeTime"></div></div>
+            <div class="scope-hint">Move the <kbd>MOUSE</kbd> to look · <kbd>CLICK</kbd> the swimmer in trouble <span class="dim">(both arms up, going under)</span> or a shark fin · <kbd>ESC</kbd> stop</div>
+        </div>
+    </div>
+
+    <!-- Active call -->
+    <div id="callCard" class="call off">
+        <div class="call-icon"><i id="callIcon" class="fa-solid fa-person-swimming"></i></div>
+        <div class="call-body">
+            <div class="call-kicker">EMERGENCY CALL <span id="callSpotted" class="call-spotted off">SPOTTED · BONUS</span></div>
+            <div class="call-title" id="callTitle">Drowning swimmer</div>
+            <div class="call-where"><i class="fa-solid fa-location-dot"></i> <span id="callWhere">Tower 1</span> · <span id="callDist"></span></div>
+        </div>
+        <div class="call-side">
+            <div class="call-timer" id="callTimer">3:00</div>
+            <div class="call-stage" id="callStage">GET THERE</div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="cpr.js"></script>
+    <script src="scope.js"></script>
+</body>
+</html>

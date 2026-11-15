@@ -1,0 +1,77 @@
+Locales = Locales or {}
+
+Locales['en'] = {
+    -- HUD
+    hud_idle        = 'Go to a tower and watch the water',
+    hud_call        = '%s · %s · %sm',
+    hud_watch       = '[E] Watch the water · %s',
+    hud_grab        = '[E] Grab the swimmer',
+    hud_grab_float  = '[E] Turn them over and tow them in',
+    hint_float      = 'Swim out to them (red marker): they are not moving',
+    need_swim       = 'They\'re unconscious: get in the water and tow them in.',
+    hud_bring       = 'Carry them onto the sand',
+    hud_bring_ski   = 'Ride into the shallows by the beach and stop: they climb off by themselves',
+    hint_open_sand  = 'Move away from the tower to open sand',
+    hud_lay         = '[E] Lay them down',
+    hud_cpr         = '[E] Start CPR',
+    hud_treat       = '[E] Treat the sting',
+    hud_alarm       = '[E] Sound the alarm · %s',
+    hud_go_tower    = 'Go to %s and sound the alarm',
+    hint_swim       = 'Swim out to them (red marker), press E when close',
+    hint_swim_ski   = 'Swim out, or get a jet ski at the HQ boss · press E when close',
+    hint_swim_have  = 'Swim or ride your jet ski out to them (red marker) · press E when close',
+    hint_person     = 'Go to the person (red marker on the map)',
+    hud_rescuing    = 'A crew mate is bringing them in',
+    hud_jetski_get  = '[E] Get a jet ski',
+    hud_jetski_ret  = '[E] Return the jet ski',
+    hud_jetski_tower = '[E] Get a jet ski here',
+
+    -- signs
+    sign_job        = 'LIFEGUARD JOB',
+    sign_job_sub    = '[ALT] Start a shift here',
+    sign_hq         = 'LIFEGUARD HQ',
+    sign_hq_sub     = 'Jet ski · Calls come in by radio',
+    sign_tower      = 'LIFEGUARD %s',
+
+    -- calls
+    call_in         = '%s near %s!',
+    call_spotted    = 'You spotted it: %s near %s. Bonus pay!',
+    call_timeout    = 'Too late: bystanders took care of it.',
+    rescued         = 'Swimmer safe on the beach!',
+    cpr_saved       = 'Pulse restored. You saved a life!',
+    cpr_lost        = 'Paramedics take over. You did everything you could.',
+    treated         = 'Sting treated. They\'re feeling better.',
+    treat_failed    = 'That didn\'t go well. Try again.',
+    shark_cleared   = 'Water cleared. Nobody got hurt.',
+    bino_title      = 'TOWER WATCH · %s',
+    bino_help       = 'MOUSE look · SCROLL zoom · E / CLICK mark the person in trouble · BACKSPACE stop',
+    bino_auto       = 'Scanning the water...',
+    bino_zoom       = 'Zoom in (scroll) to be sure first',
+    bino_waving     = 'Just waving to friends. They are fine!',
+    bino_fine       = 'They are fine, just enjoying the water.',
+    watch_nothing   = 'Nothing out there right now.',
+    watch_cooldown  = 'Your eyes need a break (%ss).',
+    have_call       = 'Handle the current call first.',
+
+    -- errors
+    too_far         = 'Get closer.',
+    not_sand        = 'Bring them onto the beach sand.',
+    busy            = 'Finish what you are doing first.',
+    too_fast        = 'Bring them in first.',
+    level_needed    = '%s needs level %s.',
+    jetski_out      = 'Your jet ski is waiting in the water in front of HQ (marked on the map).',
+    jetski_back     = 'Jet ski returned.',
+    jetski_out_tower = 'Your jet ski is waiting in the water in front of this tower (marked on the map).',
+    no_water        = 'No open water close to this tower for a jet ski.',
+    no_jetski       = 'You don\'t have a jet ski out.',
+
+    -- first aid
+    fa_step         = 'First aid: %s',
+    fa_pack         = 'Applying a cold pack...',
+    clearing        = 'Clearing the water...',
+
+    blip_tower      = 'Lifeguard Tower',
+    blip_call       = 'Lifeguard Call',
+    blip_shark      = 'Shark',
+    blip_jetski     = 'Lifeguard Jet Ski',
+}
